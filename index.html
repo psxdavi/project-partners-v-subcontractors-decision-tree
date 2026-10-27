@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UKRI Partner Compliance Tool (LSBU)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'lsbu-blue': '#005BBB',
+                        'lsbu-charcoal': '#1C1C1C',
+                        'lsbu-partner': '#00B78B',
+                        'lsbu-service': '#FFB800',
+                        'lsbu-risk': '#e74c3c',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'base',
+            flowchart: {
+                htmlLabels: true
+            },
+            themeVariables: {
+                fontFamily: 'Inter, sans-serif',
+                primaryTextColor: '#1C1C1C',
+                lineColor: '#1C1C1C',
+                defaultLinkColor: '#1C1C1C',
+            }
+        });
+    </script>
+
+    <style>
+        .header-banner {
+            background-color: #005BBB;
+            background-image: linear-gradient(135deg, #005BBB 0%, #1C1C1C 100%);
+        }
+
+        .mermaid {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .lsbu rect, .lsbu polygon {
+            fill: #005BBB !important;
+            stroke: #ffffff !important;
+        }
+        .lsbu text { fill: #ffffff !important; }
+
+        .risk rect, .risk polygon {
+            fill: #e74c3c !important;
+            stroke: #ffffff !important;
+        }
+        .risk text { fill: #ffffff !important; }
+
+        .partner rect, .partner polygon {
+            fill: #00B78B !important;
+            stroke: #ffffff !important;
+        }
+        .partner text { fill: #ffffff !important; }
+
+        .service rect, .service polygon {
+            fill: #FFB800 !important;
+            stroke: #ffffff !important;
+        }
+        .service text { fill: #1C1C1C !important; }
+
+        .highlight-row {
+            outline: 3px solid #FFB800;
+            outline-offset: -2px;
+            background-color: #eff6ff !important;
+        }
+
+        .highlight-node rect, .highlight-node polygon {
+            stroke: #FFB800 !important;
+            stroke-width: 4px !important;
+        }
+
+        .scenario-button-active {
+            background-color: #ffffff;
+            color: #005BBB;
+            border-color: #FFB800;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-lsbu-charcoal min-h-screen">
+
+<header class="header-banner p-4 shadow-lg rounded-b-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <h1 class="text-2xl font-extrabold text-white">
+            UKRI Partner Compliance & Risk Navigator
+        </h1>
+        <span class="text-white text-sm opacity-75">
+            Guidance for LSBU Staff
+        </span>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto p-4 md:p-8">
+
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+<div class="lg:col-span-3 space-y-10">
+
+    <h2 class="text-xl md:text-2xl font-bold border-b-2 border-lsbu-blue pb-2 text-lsbu-blue">
+        1. UKRI Partner Role Flowchart
+    </h2>
+
+    <div class="overflow-x-auto rounded-xl">
+        <div id="mermaid-flowchart" class="mermaid w-full min-w-[1000px]">
+            flowchart TD
+                classDef lsbu fill:#005BBB,stroke:#fff,stroke-width:2px,color:#fff
+                classDef risk fill:#e74c3c,stroke:#fff,color:#fff,stroke-width:2px
+                classDef partner fill:#00B78B,stroke:#fff,color:#fff,stroke-width:2px
+                classDef service fill:#FFB800,stroke:#fff,color:#222,stroke-width:2px
+
+                A["START: Is the partner an organisation on your UKRI bid?"]:::lsbu
+                B{UK university / research organisation?}:::lsbu
+                CA["Co-Applicant<br>fEC, named PI/Co-I, NFS-listed"]:::lsbu
+                C{Charity or SME?}:::lsbu
+                C1{Are they being paid?}:::partner
+                SU["Subcontractor<br>VAT/procurement, costed, contract"]:::service
+                PP["Project Partner<br>Letter of Support, in-kind only"]:::partner
+                D{International uni, public sector, NHS?}:::lsbu
+                D1{Claiming costs or in-kind only?}:::partner
+                PPI["Project Partner (Int’l/Public)<br>In-kind only, LoS"]:::partner
+                SNHS["Subcontractor (NHS)<br>Service contract"]:::service
+                O{Dual role: contribution + payment?}:::risk
+                DR["DUAL ROLE<br>Rare, requires sign-off + separate agreements"]:::risk
+                INV["INVALID<br>Restructure or consult LSBU RAD"]:::risk
+                END["Consult LSBU RAD for edge cases"]:::lsbu
+
+                A --> B
+                B -- Yes --> CA
+                B -- No --> C
+                C -- Yes --> C1
+                C -- No --> D
+                C1 -- Yes --> SU
+                C1 -- No --> PP
+                D -- Yes --> D1
+                D -- No --> INV
+                D1 -- Claiming costs --> SNHS
+                D1 -- In-kind only --> PPI
+                SU --> O
+                PP --> O
+                PPI --> O
+                O -- Yes --> DR
+                O -- No --> END
+                DR --> END
+                SNHS --> END
+                INV --> END
+        </div>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold border-b-2 border-lsbu-blue pb-2 text-lsbu-blue mt-10">
+        2. UKRI Partner Compliance Matrix
+    </h2>
+
+    <div class="overflow-x-auto rounded-lg shadow-xl">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
+            <thead class="bg-lsbu-charcoal text-white">
+                <tr>
+                    <th class="px-3 py-3 text-left text-xs font-medium uppercase">Role</th>
+                    <th class="px-3 py-3 text-left text-xs font-medium uppercase">Who Qualifies?</th>
+                    <th class="px-3 py-3 text-left text-xs font-medium uppercase">Essential Actions</th>
+                    <th class="px-3 py-3 text-left text-xs font-medium uppercase">Common Pitfalls</th>
+                    <th class="px-3 py-3 text-left text-xs font-medium uppercase">Examples/Notes</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 text-sm">
+
+                <tr id="row-coapp" class="hover:bg-blue-50/50 transition duration-150">
+                    <td class="px-3 py-4 font-semibold text-lsbu-blue flex items-center">
+                        <i data-lucide="handshake" class="w-5 h-5 mr-2 text-lsbu-blue"></i> Co-Applicant
+                    </td>
+                    <td class="px-3 py-4">UK HEIs, approved research organisations</td>
+                    <td class="px-3 py-4">Full fEC costing; named PI/Co-I; listed in NFS</td>
+                    <td class="px-3 py-4 text-lsbu-risk">Wrong org code; missing Co-I; incorrect fEC</td>
+                    <td class="px-3 py-4">Quantum case: Co-I omitted → bid rejected</td>
+                </tr>
+
+                <tr id="row-project-partner" class="bg-gray-50 hover:bg-blue-50/50 transition">
+                    <td class="px-3 py-4 font-semibold text-lsbu-partner flex items-center">
+                        <i data-lucide="users" class="w-5 h-5 mr-2 text-lsbu-partner"></i> Project Partner
+                    </td>
+                    <td class="px-3 py-4">Charities/SMEs (unpaid); intl unis; public sector</td>
+                    <td class="px-3 py-4">Letter of Support; no funds transferred; in-kind only</td>
+                    <td class="px-3 py-4 text-lsbu-risk">Implied payments; weak LoS; borderline charity cases</td>
+                    <td class="px-3 py-4">NHS sought staff funding → reclassified to subcontractor</td>
+                </tr>
+
+                <tr id="row-subcontractor" class="hover:bg-blue-50/50 transition">
+                    <td class="px-3 py-4 font-semibold text-lsbu-service flex items-center">
+                        <i data-lucide="wrench" class="w-5 h-5 mr-2 text-lsbu-service"></i> Subcontractor
+                    </td>
+                    <td class="px-3 py-4">Paid SMEs/charities; NHS/public sector service bodies</td>
+                    <td class="px-3 py-4">Justification; procurement; VAT; LSBU contract</td>
+                    <td class="px-3 py-4 text-lsbu-risk">No procurement evidence; lumped costs</td>
+                    <td class="px-3 py-4">SME requesting £75k direct → procurement risk</td>
+                </tr>
+
+                <tr id="row-dual-role" class="bg-gray-50 hover:bg-blue-50/50 transition">
+                    <td class="px-3 py-4 font-semibold text-lsbu-risk flex items-center">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-lsbu-risk"></i> Dual Role
+                    </td>
+                    <td class="px-3 py-4">Very rare collab + paid service</td>
+                    <td class="px-3 py-4">Senior sign-off; separate budget + agreements</td>
+                    <td class="px-3 py-4 text-lsbu-risk">Subsidy risk; unclear effort split</td>
+                    <td class="px-3 py-4">Mid-bid switch triggered near-compliance failure</td>
+                </tr>
+
+                <tr id="row-international" class="hover:bg-blue-50/50 transition">
+                    <td class="px-3 py-4 font-semibold text-lsbu-partner flex items-center">
+                        <i data-lucide="globe" class="w-5 h-5 mr-2 text-lsbu-partner"></i> International
+                    </td>
+                    <td class="px-3 py-4">Non-UK HEIs/institutes</td>
+                    <td class="px-3 py-4">No UKRI funds; LoS only</td>
+                    <td class="px-3 py-4 text-lsbu-risk">Claiming costs; misclassified as Co-I</td>
+                    <td class="px-3 py-4">French uni as Co-I → invalid; must be Project Partner</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="lg:col-span-1 space-y-6">
+
+    <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-200 sticky top-8">
+        <div class="flex items-center mb-4">
+            <i data-lucide="map" class="w-7 h-7 mr-3 text-lsbu-blue"></i>
+            <h3 class="text-lg font-bold text-lsbu-charcoal">Scenario Quick Selector</h3>
+        </div>
+
+        <p class="text-xs text-gray-600 mb-3">
+            Pick a scenario. Relevant nodes & matrix row will highlight.
+        </p>
+
+        <div class="flex flex-col space-y-2">
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="coapp">
+                UK university / research org as <span class="font-semibold">Co-Applicant</span>
+            </button>
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="project-partner">
+                Charity / SME / intl uni providing <span class="font-semibold">in-kind only</span>
+            </button>
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="subcontractor">
+                Charity / SME / NHS being <span class="font-semibold">paid</span>
+            </button>
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="dual-role">
+                Partner seeking <span class="font-semibold">collaboration + payment</span>
+            </button>
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="international">
+                Non-UK university wanting to be a <span class="font-semibold">Co-I</span>
+            </button>
+            <button class="scenario-btn text-xs border border-gray-300 rounded-lg px-3 py-2" data-scenario="clear">
+                Clear highlights
+            </button>
+        </div>
+
+        <div class="mt-4 border-t border-gray-200 pt-3">
+            <p id="scenario-description" class="text-xs text-gray-700 italic">
+                Select a scenario to see how UKRI expect it to be framed.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-lsbu-blue p-6 rounded-xl shadow-2xl border-b-4 border-lsbu-risk text-white">
+        <div class="flex items-center mb-4">
+            <i data-lucide="lightbulb" class="w-8 h-8 mr-3 text-lsbu-service"></i>
+            <h3 class="text-xl font-bold text-white">LSBU Quick Guidance</h3>
+        </div>
+        <p class="text-sm italic opacity-80 mb-4 text-white">
+            Strategic risk notes from RAD on partnership compliance.
+        </p>
+        <ul class="space-y-3 list-disc ml-5 text-sm">
+            <li>Dual roles are exceptional and require institutional sign-off.</li>
+            <li>Paid charities/SMEs are subcontractors — use the correct procurement route.</li>
+            <li>Grey areas, especially international or dual roles, require early RAD consultation.</li>
+        </ul>
+    </div>
+
+</div>
+</div>
+
+</main>
+
+<script>
+    const mermaidNodeIndex = {};
+
+    const scenarioConfig = {
+        coapp: {
+            rowId: 'row-coapp',
+            nodeIds: ['A','B','CA'],
+            description: 'UK universities and research organisations with significant intellectual leadership and staff time must be listed as Co-Applicants via NFS.'
+        },
+        'project-partner': {
+            rowId: 'row-project-partner',
+            nodeIds: ['A','C','C1','PP','D','D1','PPI'],
+            description: 'Unpaid charities, SMEs, international universities, and public bodies should be Project Partners providing in-kind support only.'
+        },
+        subcontractor: {
+            rowId: 'row-subcontractor',
+            nodeIds: ['C1','SU','SNHS'],
+            description: 'If a charity, SME, NHS trust, or public body is being paid to deliver services, they must be a subcontractor with procurement and VAT compliance.'
+        },
+        'dual-role': {
+            rowId: 'row-dual-role',
+            nodeIds: ['O','DR','END'],
+            description: 'Mixed-value partnerships (collaboration + payment) are high risk and require early RAD oversight and separate agreements.'
+        },
+        international: {
+            rowId: 'row-international',
+            nodeIds: ['A','D','D1','PPI','INV'],
+            description: 'International universities cannot normally receive UKRI funds and must be listed as in-kind Project Partners (not Co-Is).'
+        }
+    };
+
+    function indexMermaidNodes() {
+        const svgRoot = document.querySelector('#mermaid-flowchart svg');
+        if (!svgRoot) return;
+
+        const ids = ['A','B','CA','C','C1','SU','PP','D','D1','PPI','SNHS','O','DR','INV','END'];
+
+        ids.forEach(id => {
+            const node =
+                svgRoot.querySelector(`g[data-id="${id}"]`) ||
+                svgRoot.querySelector(`g[id$="-${id}"]`) ||
+                svgRoot.querySelector(`g[id="${id}"]`);
+
+            if (node) mermaidNodeIndex[id] = node;
+        });
+    }
+
+    function clearHighlights() {
+        ['row-coapp','row-project-partner','row-subcontractor','row-dual-role','row-international']
+            .forEach(id => {
+                const row = document.getElementById(id);
+                if (row) row.classList.remove('highlight-row');
+            });
+
+        Object.values(mermaidNodeIndex).forEach(node => {
+            node.classList.remove('highlight-node');
+        });
+
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.classList.remove('scenario-button-active');
+        });
+    }
+
+    function applyScenario(key, el) {
+        const desc = document.getElementById('scenario-description');
+        if (!desc) return;
+
+        if (key === 'clear') {
+            clearHighlights();
+            desc.textContent = 'Select a scenario to see how UKRI expect it to be framed.';
+            return;
+        }
+
+        const config = scenarioConfig[key];
+        if (!config) return;
+
+        clearHighlights();
+
+        const row = document.getElementById(config.rowId);
+        if (row) row.classList.add('highlight-row');
+
+        config.nodeIds.forEach(id => {
+            const node = mermaidNodeIndex[id];
+            if (node) node.classList.add('highlight-node');
+        });
+
+        if (el) el.classList.add('scenario-button-active');
+
+        desc.textContent = config.description;
+    }
+
+    async function renderMermaid() {
+        const div = document.getElementById('mermaid-flowchart');
+        if (!div) return;
+
+        try {
+            const def = div.textContent.trim();
+            const { svg } = await mermaid.render('mermaid-graph-div', def);
+            div.innerHTML = svg;
+
+            indexMermaidNodes();
+        } catch (err) {
+            console.error('Mermaid error:', err);
+            div.innerHTML = '<p class="text-lsbu-risk font-bold">Error rendering flowchart.</p>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.lucide) lucide.createIcons();
+        renderMermaid();
+
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.addEventListener('click', () =>
+                applyScenario(btn.getAttribute('data-scenario'), btn)
+            );
+        });
+    });
+</script>
+
+</body>
+</html>
